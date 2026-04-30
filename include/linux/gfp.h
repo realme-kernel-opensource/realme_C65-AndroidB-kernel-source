@@ -141,6 +141,12 @@ static inline enum zone_type __gfp_zone(gfp_t flags)
 
 		return LAST_VIRT_ZONE;
 #endif
+
+	 /* Allow dma-buf etc to use virtual zones */
+	if ((flags & __GFP_COMP) && (flags & __GFP_HIGHMEM) &&
+	    !static_branch_unlikely(&movablecore_enabled))
+		return LAST_VIRT_ZONE;
+
 	return z;
 }
 
